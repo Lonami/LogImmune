@@ -5,6 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -46,25 +49,23 @@ public class LogImmune
 
         // The server needs to know when a player should have the buffs removed
         PacketHandler.INSTANCE.registerMessage(BuffMessageHandler.class, BuffMessage.class, 0, Side.SERVER);
+        logger.info("Successfully initialized");
     }
 
     // Logical Server
 
     @SubscribeEvent
     public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        logger.info("login remote?: " + event.player.getEntityWorld().isRemote);
         buffPlayer(event.player);
     }
 
     @SubscribeEvent
     public void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
-        logger.info("dimension remote?: " + event.player.getEntityWorld().isRemote);
         buffPlayer(event.player);
     }
 
     @SubscribeEvent
     public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        logger.info("respawn remote?: " + event.player.getEntityWorld().isRemote);
         buffPlayer(event.player);
     }
 
@@ -72,6 +73,13 @@ public class LogImmune
         if (!player.getEntityWorld().isRemote) {
             Buffs.buff(player);
             PacketHandler.INSTANCE.sendTo(new BuffMessage(true), (EntityPlayerMP) player);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(MODID)) {
+            ConfigManager.sync(MODID, Config.Type.INSTANCE);
         }
     }
 
