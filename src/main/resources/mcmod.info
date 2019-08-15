@@ -1,0 +1,16 @@
+[
+{
+  "modid": "logimmune",
+  "name": "Log Immune",
+  "description": "Keeps you alive before you can even fight",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Lonami/LogImmune",
+  "updateUrl": "",
+  "authorList": ["Lonami"],
+  "credits": "Lonami",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
